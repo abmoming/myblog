@@ -9,7 +9,6 @@ import lombok.Getter;
  */
 @Getter
 public enum AccountStateEm {
-
     /**
      * 未知
      */
@@ -18,11 +17,15 @@ public enum AccountStateEm {
     /**
      * 禁用
      */
-    UN_ENABLE(0,"禁用"),
+    UN_ENABLE(0, "禁用"),
+    /**
+     * 已启用
+     */
+    ENABLED(1, "已启用"),
     /**
      * 账户已过期
      */
-    ACCOUNT_EXPIRED(1, "账户已过期"),
+    ACCOUNT_EXPIRED(2, "账户已过期"),
     /**
      * 账户已被锁
      */
@@ -31,10 +34,7 @@ public enum AccountStateEm {
      * 认证信息已过期
      */
     CREDENTIALS_EXPIRED(4, "认证信息已过期"),
-    /**
-     * 已启用
-     */
-    ENABLED(5, "已启用"),
+
     ;
 
     /**
@@ -51,6 +51,11 @@ public enum AccountStateEm {
         this.name = name;
     }
 
+    /**
+     * 通过code获取枚举类
+     *
+     * @param code code
+     */
     public static AccountStateEm getByCode(int code) {
         for (AccountStateEm val : AccountStateEm.values()) {
             if (code == val.getCode()) {
@@ -60,9 +65,39 @@ public enum AccountStateEm {
         return UN_KNOWN;
     }
 
+    /**
+     * 账户是否启用
+     *
+     * @param code code
+     */
     public static boolean isEnabled(int code) {
-        return code != ACCOUNT_EXPIRED.getCode()
-                && code != ACCOUNT_LOCKED.getCode()
-                && code != CREDENTIALS_EXPIRED.getCode();
+        return code != UN_ENABLE.getCode();
+    }
+
+    /**
+     * 账户是否已过期
+     *
+     * @param code
+     */
+    public static boolean isAccountExpired(int code) {
+        return code == ACCOUNT_EXPIRED.getCode();
+    }
+
+    /**
+     * 账户是否已被锁
+     *
+     * @param code code
+     */
+    public static boolean isAccountLocked(int code) {
+        return code == ACCOUNT_LOCKED.getCode();
+    }
+
+    /**
+     * 账户认证信息是否已过期
+     *
+     * @param code code
+     */
+    public static boolean isCredentialsExpired(int code) {
+        return code == CREDENTIALS_EXPIRED.getCode();
     }
 }

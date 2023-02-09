@@ -3,6 +3,8 @@ package person.justin.blog.pojo;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -18,9 +20,11 @@ import java.time.LocalDateTime;
 @TableName("blog_user")
 public class User extends BasePojo {
 
+    private static final long serialVersionUID = -69275129524468450L;
     /**
      * 主键
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
     /**
@@ -54,7 +58,7 @@ public class User extends BasePojo {
     /**
      * 手机号码
      */
-    private String mobile;
+    private String phoneNumber;
     /**
      * 来源方
      */

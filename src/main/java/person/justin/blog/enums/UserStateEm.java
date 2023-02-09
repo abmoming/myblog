@@ -1,6 +1,5 @@
 package person.justin.blog.enums;
 
-import lombok.Data;
 import lombok.Getter;
 
 /**

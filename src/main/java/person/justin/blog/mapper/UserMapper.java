@@ -12,5 +12,5 @@ import java.util.List;
  * @author gym on 2023-01-08 21:33
  */
 public interface UserMapper extends BaseMapper<User> {
-    List<Role> listRole(Long userId);
+
 }

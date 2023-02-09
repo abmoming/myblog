@@ -1,4 +1,4 @@
-package person.justin.blog.service.system.impl;
+package person.justin.blog.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -7,9 +7,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import person.justin.blog.enums.AccountStateEm;
-import person.justin.blog.pojo.LoginUser;
+import person.justin.blog.constant.CommonConstant;
+import person.justin.blog.model.LoginUser;
 import person.justin.blog.pojo.User;
+import person.justin.blog.service.SystemService;
 import person.justin.blog.service.system.RoleService;
 import person.justin.blog.service.system.UserService;
 
@@ -22,14 +23,12 @@ import person.justin.blog.service.system.UserService;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    private UserService userService;
-    @Autowired
-    private RoleService roleService;
+    private SystemService systemService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User user = userService.lambdaQuery().eq(User::getUsername, username).eq(User::getHasDelete, 0).one();
+        User user = systemService.getUser(username);
         if (ObjectUtil.isEmpty(user)) {
             throw new UsernameNotFoundException(StrUtil.format("用户:{},不存在", username));
         }
@@ -37,22 +36,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return createLoginUser(user);
     }
 
-    /**
-     * 校验用户(好像不用在这做校验，springsecurity自动会做校验)  待验证
-     *
-     * @param user
-     * @return
-     */
-    /*private boolean validAccountState(User user) {
-        int state = user.getState();
-        if(state == AccountStateEm.ACCOUNT_EXPIRED.getCode()){
-
-        }
-    }*/
     private LoginUser createLoginUser(User user) {
-
-        return LoginUser.builder()
-                .user(user)
-                .roles(userService.listRole(user.getId())).build();
+        return new LoginUser(user, systemService.listRole(user.getId()));
     }
 }

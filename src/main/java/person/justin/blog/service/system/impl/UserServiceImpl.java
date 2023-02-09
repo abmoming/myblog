@@ -10,15 +10,12 @@ import person.justin.blog.service.system.UserService;
 import java.util.List;
 
 /**
- * <p>用户业务层实现
+ * <p>用户业务实现层
  *
  * @author gym on 2023-01-08 21:38
  */
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
-    @Override
-    public List<Role> listRole(Long userId) {
-        return baseMapper.listRole(userId);
-    }
+
 }

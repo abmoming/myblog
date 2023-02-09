@@ -1,7 +1,6 @@
-package person.justin.blog.pojo;
+package person.justin.blog.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,11 +8,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.Assert;
 import person.justin.blog.enums.AccountStateEm;
+import person.justin.blog.pojo.Role;
+import person.justin.blog.pojo.User;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -22,10 +22,11 @@ import java.util.stream.Collectors;
  * @author gym on 2023-01-07 22:23
  */
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginUser implements UserDetails {
+
+    private static final long serialVersionUID = -3459536902335106672L;
 
     /**
      * 用户
@@ -59,19 +60,19 @@ public class LoginUser implements UserDetails {
     @Override
     public boolean isAccountNonExpired() {
         assertUser(this.user);
-        return true;
+        return !AccountStateEm.isAccountExpired(this.user.getAccountState());
     }
 
     @Override
     public boolean isAccountNonLocked() {
         assertUser(this.user);
-        return true;
+        return !AccountStateEm.isAccountLocked(this.user.getAccountState());
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
         assertUser(this.user);
-        return true;
+        return !AccountStateEm.isCredentialsExpired(this.user.getAccountState());
     }
 
     @Override

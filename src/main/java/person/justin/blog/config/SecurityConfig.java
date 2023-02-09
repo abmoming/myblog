@@ -1,19 +1,17 @@
 package person.justin.blog.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.authentication.jaas.memory.InMemoryConfiguration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.provisioning.UserDetailsManager;
-import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
-import person.justin.blog.pojo.LoginUser;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 /**
  * <p>Spring Security配置
@@ -27,36 +25,40 @@ import person.justin.blog.pojo.LoginUser;
 @SpringBootConfiguration
 public class SecurityConfig {
 
+    @Autowired
+    @Qualifier("userDetailsServiceImpl")
+    private UserDetailsService userDetailsService;
+    @Autowired
+    @Qualifier("blogAuthenticationFailureHandler")
+    private AuthenticationFailureHandler authenticationFailureHandler;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public UserDetailsManager userDetailsManager() {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration auth) throws Exception {
 
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withUsername("admin").passwordEncoder(password -> passwordEncoder().encode(password)).password("123").roles("admin").build());
-        manager.createUser(User.withUsername("user").passwordEncoder(password -> passwordEncoder().encode(password)).password("123").roles("user").build());
-
-        return manager;
+        return auth.getAuthenticationManager();
     }
 
-
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeRequests()
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf()
+                .disable()
+                .authorizeRequests()
                 .antMatchers("/hello-admin/**").hasRole("admin")
                 .antMatchers("/hello-user/**").hasAnyRole("admin", "user")
                 .anyRequest()
                 .authenticated()
                 .and()
                 .formLogin()
+                .failureHandler(authenticationFailureHandler)
                 .permitAll()
                 .and()
-                .csrf()
-                .disable();
-        return httpSecurity.build();
+                .userDetailsService(userDetailsService);
+        return http.build();
     }
 
     /*@Bean
@@ -65,4 +67,8 @@ public class SecurityConfig {
 
         };
     }*/
+
+    //public static void main(String[] args) {
+    //    System.out.println(new SecurityConfig().passwordEncoder().encode("123"));
+    //}
 }

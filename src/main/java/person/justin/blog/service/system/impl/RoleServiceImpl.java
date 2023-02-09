@@ -6,6 +6,8 @@ import person.justin.blog.mapper.RoleMapper;
 import person.justin.blog.pojo.Role;
 import person.justin.blog.service.system.RoleService;
 
+import java.util.List;
+
 /**
  * <p>角色业务实现层
  *
@@ -13,4 +15,9 @@ import person.justin.blog.service.system.RoleService;
  */
 @Service
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements RoleService {
+
+    @Override
+    public List<Role> listRole(long userId) {
+        return baseMapper.listRole(userId);
+    }
 }

@@ -15,9 +15,9 @@ public interface DataScopeHandler {
      *
      * @param mapperId    mapperId
      * @param dataScope   数据权限模型
-     * @param loginUser   登录用户
+     * @param user   登录用户
      * @param originalSql 源sql
      * @return String
      */
-    String sqlCondition(String mapperId, DataScopeModel dataScope, LoginUser loginUser, String originalSql);
+    String sqlCondition(String mapperId, DataScopeModel dataScope, LoginUser user, String originalSql);
 }

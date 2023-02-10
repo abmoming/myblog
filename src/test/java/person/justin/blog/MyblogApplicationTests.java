@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import person.justin.blog.demo.*;
 import person.justin.blog.demo.Import.Bean01;
 import person.justin.blog.demo.Import.Bean02;
@@ -43,6 +44,9 @@ class MyblogApplicationTests {
     @Autowired
     private ObjectProvider<Map<String, A>> aObjectProvider;
 
+    @Resource
+    private JdbcTemplate jdbcTemplate;
+
 
     @Test
     public void testRouters() {
@@ -79,5 +83,10 @@ class MyblogApplicationTests {
         System.out.println(aObjectProvider.getIfAvailable());
         // System.out.println(aObjectProvider.getIfAvailable());
         // System.out.println(aObjectProvider.orderedStream().findFirst().get());
+    }
+
+    @Test
+    public void testJdbcTemplate() {
+        System.out.println(jdbcTemplate == null);
     }
 }

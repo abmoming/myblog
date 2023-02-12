@@ -29,7 +29,6 @@ public class BlogDataScopeHandler implements DataScopeHandler {
         String resourceCode = dataScope.getResourceCode();
         List<Long> ids = new ArrayList<>();
 
-        // 用户登录的时候，这一步是还没有拿到用户信息的
         DataScopeModel dataScopeDb = scopeModelHandler.getDataScopeByMapper(mapperId, user.getUser().getId());
         if (ObjectUtil.isNull(dataScopeDb) && StrUtil.isNotBlank(resourceCode)) {
             dataScopeDb = scopeModelHandler.getDataScope(resourceCode);

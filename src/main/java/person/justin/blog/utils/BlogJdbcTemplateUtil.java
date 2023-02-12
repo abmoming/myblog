@@ -1,6 +1,5 @@
 package person.justin.blog.utils;
 
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -16,8 +15,6 @@ import java.util.Objects;
  *
  * @author gym on 2023-02-10 11:09
  */
-// @Component
-// @AllArgsConstructor
 @Slf4j
 public class BlogJdbcTemplateUtil {
 

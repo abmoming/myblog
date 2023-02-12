@@ -1,6 +1,5 @@
 package person.justin.blog.datascope.handler;
 
-
 import person.justin.blog.datascope.model.DataScopeModel;
 
 /**

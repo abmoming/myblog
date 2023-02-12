@@ -16,8 +16,10 @@ import java.util.Objects;
 @AllArgsConstructor
 public enum DataScopeEm {
 
-    // TODO 数据权限枚举类需要定义未知的情况吗？
-
+    /**
+     * 未知
+     */
+    UNKNOWN(0, "未知"),
     /**
      * 全部
      */
@@ -60,6 +62,6 @@ public enum DataScopeEm {
                 return val;
             }
         }
-        return null;
+        return UNKNOWN;
     }
 }

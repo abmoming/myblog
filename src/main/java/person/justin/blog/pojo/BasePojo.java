@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Data
 public abstract class BasePojo implements Serializable {
 
-    private static final long serialVersionUID = -8064166790474996051L;
+    private static final long serialVersionUID = 1L;
     /**
      * 是否删除
      */
@@ -27,7 +27,12 @@ public abstract class BasePojo implements Serializable {
     /**
      * 创建人
      */
-    private String creator;
+    private Integer creator;
+
+    /**
+     * 创建部门
+     */
+    private Integer createDept;
     /**
      * 更新时间
      */
@@ -35,5 +40,5 @@ public abstract class BasePojo implements Serializable {
     /**
      * 更新人
      */
-    private String updater;
+    private Integer updater;
 }

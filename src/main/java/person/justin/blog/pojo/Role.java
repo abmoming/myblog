@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @TableName("blog_role")
 public class Role extends BasePojo {
 
-    private static final long serialVersionUID = -2019796104818247409L;
+    private static final long serialVersionUID = 1L;
     /**
      * 主键
      */

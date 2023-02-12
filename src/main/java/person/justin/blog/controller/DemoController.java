@@ -11,10 +11,14 @@ import person.justin.blog.annotation.WebResponseExclude;
 import person.justin.blog.demo.DemoService;
 import person.justin.blog.node.BaseNode;
 import person.justin.blog.pojo.Menu;
+import person.justin.blog.pojo.Role;
 import person.justin.blog.pojo.vo.MenuVO;
+import person.justin.blog.service.SystemService;
+import person.justin.blog.service.system.RoleService;
 import person.justin.blog.utils.JsonUtil;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -26,6 +30,10 @@ public class DemoController {
 
     @Autowired
     private DemoService demoService;
+    @Autowired
+    private SystemService systemService;
+    @Autowired
+    private RoleService roleService;
 
     @WebResponseExclude
     @GetMapping("/hello-admin")
@@ -76,8 +84,7 @@ public class DemoController {
     }
 
     @RequestMapping("/demo04")
-    public void demo04() {
-
-
+    public List<Role> demo04() {
+        return roleService.list();
     }
 }

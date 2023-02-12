@@ -1,7 +1,8 @@
-package person.justin.blog.model;
+package person.justin.blog.datascope.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import person.justin.blog.constant.DataScopeConstant;
 import person.justin.blog.enums.DataScopeEm;
 
 import java.io.Serializable;
@@ -14,6 +15,7 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 public class DataScopeModel implements Serializable {
+
 
     public DataScopeModel(Boolean searched) {
         this.searched = searched;
@@ -30,9 +32,9 @@ public class DataScopeModel implements Serializable {
     private String resourceCode;
 
     /**
-     * 数据权限字段    这里为什么默认值是创建部门？？？
+     * 数据权限字段
      */
-    private String scopeColumn;
+    private String scopeColumn = DataScopeConstant.DEFAULT_COLUMN;
 
     /**
      * 数据权限类型

@@ -20,11 +20,10 @@ import java.time.LocalDateTime;
 @TableName("blog_user")
 public class User extends BasePojo {
 
-    private static final long serialVersionUID = -69275129524468450L;
+    private static final long serialVersionUID = 1L;
     /**
      * 主键
      */
-    @JsonSerialize(using = ToStringSerializer.class)
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
     /**

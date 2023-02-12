@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
 @TableName("blog_data_scope")
 public class DataScope extends BasePojo {
 
-    private static final long serialVersionUID = 842757068772056858L;
+    private static final long serialVersionUID = 1L;
     /**
      * 主键
      */

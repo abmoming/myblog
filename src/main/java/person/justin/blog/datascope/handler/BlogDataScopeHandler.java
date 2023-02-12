@@ -1,26 +1,65 @@
 package person.justin.blog.datascope.handler;
 
-import person.justin.blog.model.DataScopeModel;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import lombok.RequiredArgsConstructor;
+import person.justin.blog.datascope.model.DataScopeModel;
+import person.justin.blog.enums.DataScopeEm;
 import person.justin.blog.model.LoginUser;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>数据权限规则实现
  *
  * @author gym on 2023-02-06 10:02
  */
-public class BlogDataScopeHandler implements DataScopeHandler{
+@RequiredArgsConstructor
+public class BlogDataScopeHandler implements DataScopeHandler {
+
+    private final ScopeModelHandler scopeModelHandler;
 
     @Override
-    public String sqlCondition(String mapperId, DataScopeModel dataScope, LoginUser loginUser, String originalSql) {
+    public String sqlCondition(String mapperId, DataScopeModel dataScope, LoginUser user, String originalSql) {
 
-        // 1.通过msId和用户ID查出用户对应的数据权限
-        // 2.判断查出来的数据权限为空且dataScope的资源编号不为空
-        // 3.
+        String whereSql = " where scope.{} in ({})";
+        String resourceCode = dataScope.getResourceCode();
+        List<Long> ids = new ArrayList<>();
 
+        // 用户登录的时候，这一步是还没有拿到用户信息的
+        DataScopeModel dataScopeDb = scopeModelHandler.getDataScopeByMapper(mapperId, user.getUser().getId());
+        if (ObjectUtil.isNull(dataScopeDb) && StrUtil.isNotBlank(resourceCode)) {
+            dataScopeDb = scopeModelHandler.getDataScope(resourceCode);
+        }
 
+        dataScope = ObjectUtil.isNotNull(dataScopeDb) ? dataScopeDb : dataScope;
+        Integer scopeType = Objects.requireNonNull(dataScope).getScopeType();
+        DataScopeEm dataScopeEm = DataScopeEm.getDataScopeType(scopeType);
+        switch (dataScopeEm) {
+            case OWN:
+                ids.add(user.getUser().getId());
+                break;
+            case OWN_DEPT:
+                // TODO 部门数据过滤
+                break;
+            case OWN_DEPT_CHILD:
+                // TODO 部门和子部门的数据过滤
+                break;
+            case CUSTOM:
+                // TODO 自定义
+                break;
+            default:
+                return null;
+        }
 
-
-
-        return null;
+        // select {} from ({}) scope where scope.{} in ({});
+        return StrUtil.format("select {} from ({}) scope".concat(whereSql)
+                , StrUtil.isEmpty(dataScope.getVisibleField()) ? StringPool.STAR : dataScope.getVisibleField()
+                , originalSql
+                , dataScope.getScopeColumn()
+                , StrUtil.join(StringPool.COMMA, ids));
     }
 }

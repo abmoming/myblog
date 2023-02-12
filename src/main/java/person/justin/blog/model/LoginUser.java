@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class LoginUser implements UserDetails {
 
-    private static final long serialVersionUID = -3459536902335106672L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * 用户

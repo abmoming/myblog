@@ -19,7 +19,7 @@ import lombok.EqualsAndHashCode;
 @TableName("blog_menu")
 public class Menu extends BasePojo {
 
-    private static final long serialVersionUID = -458259017919585238L;
+    private static final long serialVersionUID = 1L;
     /**
      * 主键
      */

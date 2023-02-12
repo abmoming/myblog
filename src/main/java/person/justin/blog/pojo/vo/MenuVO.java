@@ -18,6 +18,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class MenuVO extends Menu implements Node<MenuVO> {
 
+    private static final long serialVersionUID = 1L;
     /**
      * 重写父类的getId()
      */

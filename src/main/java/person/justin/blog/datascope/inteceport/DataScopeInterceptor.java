@@ -1,6 +1,8 @@
 package person.justin.blog.datascope.inteceport;
 
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -11,12 +13,14 @@ import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.ClassUtils;
-import org.springframework.util.StringUtils;
 import person.justin.blog.annotation.DataAuth;
 import person.justin.blog.datascope.handler.DataScopeHandler;
 import person.justin.blog.datascope.props.DataScopeProperties;
-import person.justin.blog.model.DataScopeModel;
+import person.justin.blog.datascope.model.DataScopeModel;
 import person.justin.blog.model.LoginUser;
 import person.justin.blog.mybatis.interceptor.QueryInterceptor;
 import person.justin.blog.utils.AuthUtil;
@@ -55,10 +59,21 @@ public class DataScopeInterceptor implements QueryInterceptor {
             return;
         }
 
-        LoginUser user = AuthUtil.getUser();
-        if (Objects.isNull(user)) {
+        // LoginUser user = AuthUtil.getUser();
+        LoginUser user;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (ObjectUtil.isEmpty(auth)) {
+            return;
+        } else {
+            user = (LoginUser) auth.getPrincipal();
+        }
+
+        if (ObjectUtil.isEmpty(user)) {
             return;
         }
+
+
+
 
         // 查找mapper接口方法的DataAuth注解
         DataAuth dataAuth = findDataAuthAnnotation(ms);
@@ -73,9 +88,11 @@ public class DataScopeInterceptor implements QueryInterceptor {
 
         DataScopeModel dataScope = initDataScopeModel(dataAuth);
         // 数据权限规则处理
-        dataScopeHandler.sqlCondition(ms.getId(), dataScope, user, boundSql.getSql());
-
-
+        String sqlCondition = dataScopeHandler.sqlCondition(ms.getId(), dataScope, user, boundSql.getSql());
+        if (StrUtil.isNotEmpty(sqlCondition)) {
+            PluginUtils.MPBoundSql mpBoundSql = PluginUtils.mpBoundSql(boundSql);
+            mpBoundSql.sql(sqlCondition);
+        }
     }
 
     @Data
@@ -169,11 +186,11 @@ public class DataScopeInterceptor implements QueryInterceptor {
      */
     private DataScopeModel initDataScopeModel(DataAuth dataAuth) {
 
+        DataScopeModel dataScopeModel = new DataScopeModel();
         if (Objects.isNull(dataAuth)) {
-            return new DataScopeModel();
+            return dataScopeModel;
         }
 
-        DataScopeModel dataScopeModel = new DataScopeModel();
         dataScopeModel.setResourceCode(dataAuth.code());
         dataScopeModel.setScopeColumn(dataAuth.column());
         dataScopeModel.setScopeType(dataAuth.scopeType().getType());

@@ -60,6 +60,7 @@ public class DataScopeInterceptor implements QueryInterceptor {
         }
 
         // LoginUser user = AuthUtil.getUser();
+        // 这里肯定要改的，到时候直接在AuthUtil获取用户就行(通过token解析)
         LoginUser user;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (ObjectUtil.isEmpty(auth)) {

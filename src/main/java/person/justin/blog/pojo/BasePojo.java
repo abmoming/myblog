@@ -27,12 +27,12 @@ public abstract class BasePojo implements Serializable {
     /**
      * 创建人
      */
-    private Integer creator;
+    private Long creator;
 
     /**
      * 创建部门
      */
-    private Integer createDept;
+    private Long createDept;
     /**
      * 更新时间
      */
@@ -40,5 +40,5 @@ public abstract class BasePojo implements Serializable {
     /**
      * 更新人
      */
-    private Integer updater;
+    private Long updater;
 }

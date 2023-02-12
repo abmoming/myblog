@@ -67,9 +67,4 @@ public class DataScope extends BasePojo {
      * 数据权限备注
      */
     private String remark;
-
-    /**
-     * 创建部门
-     */
-    private Long createDept;
 }

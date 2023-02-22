@@ -1,12 +1,19 @@
 package person.justin.blog.config;
 
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,22 +22,13 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 
 /**
  * <p>Spring Security配置
- * 新版WebSecurityConfigurerAdapter标记为过时,
- * 改为以下方案：
- * SecurityFilterChain来配置HttpSecurity,
- * WebSecurityCustomizer来配置WebSecurity.
  *
  * @author gym on 2023-01-07 19:29
  */
+@SuppressWarnings({"deprecation"})
 @SpringBootConfiguration
-public class SecurityConfig {
-
-    @Autowired
-    @Qualifier("userDetailsServiceImpl")
-    private UserDetailsService userDetailsService;
-    @Autowired
-    @Qualifier("blogAuthenticationFailureHandler")
-    private AuthenticationFailureHandler authenticationFailureHandler;
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -38,37 +36,13 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration auth) throws Exception {
-
-        return auth.getAuthenticationManager();
+    @Override
+    protected AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
     }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf()
-                .disable()
-                .authorizeRequests()
-                .antMatchers("/hello-admin/**").hasRole("admin")
-                .antMatchers("/hello-user/**").hasAnyRole("admin", "user")
-                .anyRequest()
-                .authenticated()
-                .and()
-                .formLogin()
-                .failureHandler(authenticationFailureHandler)
-                .permitAll()
-                .and()
-                .userDetailsService(userDetailsService);
-        return http.build();
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.csrf().disable().formLogin().and().authorizeRequests().anyRequest().fullyAuthenticated();
     }
-
-    /*@Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> {
-
-        };
-    }*/
-
-    //public static void main(String[] args) {
-    //    System.out.println(new SecurityConfig().passwordEncoder().encode("123"));
-    //}
 }

@@ -49,14 +49,4 @@ public class BaseNode<T> implements Node<T> {
     public Boolean getHasChildren() {
         return CollectionUtil.isNotEmpty(children);
     }
-
-    /*public static void main(String[] args) throws Exception {
-        Menu menu = new Menu();
-        menu.setId(123456789L);
-        System.out.println(menu);
-        System.out.println(JSONUtil.toJsonStr(menu));
-        BaseNode baseNode = new BaseNode();
-        baseNode.setId(6666666666L);
-        System.out.println(new ObjectMapper().writeValueAsString(baseNode));
-    }*/
 }

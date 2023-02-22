@@ -41,6 +41,4 @@ public class ForestNodeMerge {
         });
         return forestNodeManager.getRoot();
     }
-
-    // 深拷贝处理？看下new ArrayList<>()是浅拷贝？new LinkedArrayList<>()是深拷贝？TODO
 }

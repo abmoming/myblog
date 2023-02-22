@@ -6,13 +6,21 @@ spring:
     username: root
     password: root
     driver-class-name: com.mysql.jdbc.Driver
+  redis:
+    host: 120.76.40.117
+    password: ab34996871
+    port: 6379
+    database: 0
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
+
 blog:
-  b:
-    id: 1
-    name: yml名称
-  config:
-    enable: true
+  #  b:
+  #    id: 1
+  #    name: yml名称
+  #  config:
+  #    enable: true
+  data-scope:
+    enabled: false

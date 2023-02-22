@@ -18,7 +18,9 @@ import person.justin.blog.service.system.RoleService;
 import person.justin.blog.utils.JsonUtil;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -86,5 +88,13 @@ public class DemoController {
     @RequestMapping("/demo04")
     public List<Role> demo04() {
         return roleService.list();
+    }
+
+    @RequestMapping("/auth")
+    public Map<String, Object> auth(String code) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("code", code);
+        System.out.println("code ---> " + code);
+        return map;
     }
 }

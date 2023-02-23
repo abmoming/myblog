@@ -1,5 +1,6 @@
 package person.justin.blog.auth.config;
 
+import cn.hutool.core.util.ObjectUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.core.annotation.Order;
@@ -10,11 +11,20 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.TokenGranter;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import person.justin.blog.auth.granter.BlogTokenGranter;
 import person.justin.blog.auth.service.BlogClientDetailServiceImpl;
 import person.justin.blog.constant.AuthConstant;
+import person.justin.blog.redis.BlogRedis;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * <p>授权服务器
@@ -36,6 +46,12 @@ public class BlogAuthorizationServerConfig extends AuthorizationServerConfigurer
 
     private final DataSource dataSource;
 
+    private final TokenEnhancer tokenEnhancer;
+
+    private final JwtAccessTokenConverter jwtAccessTokenConverter;
+
+    private final BlogRedis blogRedis;
+
     /**
      * 1.配置端点信息
      * 1.1自定义授权类型(新增验证码、第三方登录授权类型)
@@ -47,10 +63,18 @@ public class BlogAuthorizationServerConfig extends AuthorizationServerConfigurer
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 
+        TokenGranter tokenGranter = BlogTokenGranter.getTokenGranter(authenticationManager, endpoints, blogRedis);
+
         endpoints.tokenStore(tokenStore)
                 .authenticationManager(authenticationManager)
-                .userDetailsService(userDetailsService);
-        // .tokenGranter();
+                .userDetailsService(userDetailsService)
+                .tokenGranter(tokenGranter);
+
+        if (ObjectUtil.isNotNull(jwtAccessTokenConverter) && ObjectUtil.isNotNull(tokenEnhancer)) {
+            TokenEnhancerChain chain = new TokenEnhancerChain();
+            chain.setTokenEnhancers(new ArrayList<>(Arrays.asList(jwtAccessTokenConverter, tokenEnhancer)));
+            endpoints.tokenEnhancer(chain).accessTokenConverter(jwtAccessTokenConverter);
+        }
     }
 
     /**

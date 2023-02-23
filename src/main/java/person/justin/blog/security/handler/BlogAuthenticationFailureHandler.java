@@ -1,4 +1,4 @@
-package person.justin.blog.config.handler;
+package person.justin.blog.security.handler;
 
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.AuthenticationException;

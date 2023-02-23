@@ -1,4 +1,4 @@
-package person.justin.blog.config;
+package person.justin.blog.security.config;
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;

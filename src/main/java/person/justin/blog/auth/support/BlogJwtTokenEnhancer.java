@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import person.justin.blog.jwt.prop.JwtProperties;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <p>jwt增强器
@@ -28,9 +29,8 @@ public class BlogJwtTokenEnhancer implements TokenEnhancer {
 
         HashMap<String, Object> info = new HashMap<>();
         info.put("customer", "自定义内容");
-
-
         ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(info);
+
         return accessToken;
     }
 }

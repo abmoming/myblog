@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import person.justin.blog.constant.JwtConstant;
 
 /**
- * <p>
+ * <p>Jwt属性类
  *
  * @author gym on 2023-02-16 11:39
  */

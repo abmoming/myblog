@@ -47,6 +47,10 @@ public class BlogRedis {
         valueOps.set(key, value, seconds, TimeUnit.SECONDS);
     }
 
+    public void setEx(String key, Object value, Duration timeout) {
+        valueOps.set(key, value, timeout);
+    }
+
     /**
      * 存放key，并将key生存时间设置为timeout
      * 如果key存在，不会覆写旧值，并返回false

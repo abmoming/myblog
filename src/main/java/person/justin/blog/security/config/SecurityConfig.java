@@ -41,8 +41,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManager();
     }
 
+    /**
+     * httpBasic是Http协议最基础的认证方式
+     * 在请求头Authorization参数中附带用户/密码的base64编码（并不安全，但它是一些现代主流认证的基础）
+     * 在spring security的oauth中，内部认证默认就是用的HTTPBasic
+     * @param http the {@link HttpSecurity} to modify
+     * @throws Exception
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().formLogin().and().authorizeRequests().anyRequest().fullyAuthenticated();
+
+        http.httpBasic().and().csrf().disable().formLogin().and().authorizeRequests().anyRequest().fullyAuthenticated();
     }
 }

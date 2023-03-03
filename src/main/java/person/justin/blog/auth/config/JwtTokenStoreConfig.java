@@ -43,7 +43,7 @@ public class JwtTokenStoreConfig {
      * 增强jwt(可额外配置信息)
      */
     @Bean
-    public TokenEnhancer tokenEnhancer(JwtProperties jwtProperties, JwtAccessTokenConverter jwtAccessTokenConverter) {
+    public BlogJwtTokenEnhancer blogJwtTokenEnhancer(JwtProperties jwtProperties, JwtAccessTokenConverter jwtAccessTokenConverter) {
         return new BlogJwtTokenEnhancer(jwtProperties, jwtAccessTokenConverter);
     }
 }

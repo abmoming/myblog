@@ -19,6 +19,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import person.justin.blog.auth.granter.BlogTokenGranter;
 import person.justin.blog.auth.service.BlogClientDetailServiceImpl;
+import person.justin.blog.auth.support.BlogJwtTokenEnhancer;
 import person.justin.blog.constant.AuthConstant;
 import person.justin.blog.redis.BlogRedis;
 
@@ -46,7 +47,7 @@ public class BlogAuthorizationServerConfig extends AuthorizationServerConfigurer
 
     private final DataSource dataSource;
 
-    private final TokenEnhancer tokenEnhancer;
+    private final BlogJwtTokenEnhancer blogJwtTokenEnhancer;
 
     private final JwtAccessTokenConverter jwtAccessTokenConverter;
 
@@ -70,9 +71,9 @@ public class BlogAuthorizationServerConfig extends AuthorizationServerConfigurer
                 .userDetailsService(userDetailsService)
                 .tokenGranter(tokenGranter);
 
-        if (ObjectUtil.isNotNull(jwtAccessTokenConverter) && ObjectUtil.isNotNull(tokenEnhancer)) {
+        if (ObjectUtil.isNotNull(jwtAccessTokenConverter) && ObjectUtil.isNotNull(blogJwtTokenEnhancer)) {
             TokenEnhancerChain chain = new TokenEnhancerChain();
-            chain.setTokenEnhancers(new ArrayList<>(Arrays.asList(jwtAccessTokenConverter, tokenEnhancer)));
+            chain.setTokenEnhancers(new ArrayList<>(Arrays.asList(jwtAccessTokenConverter, blogJwtTokenEnhancer)));
             endpoints.tokenEnhancer(chain).accessTokenConverter(jwtAccessTokenConverter);
         }
     }

@@ -47,16 +47,19 @@ public class CaptchaTokenGranter extends AbstractTokenGranter {
         this.authenticationManager = authenticationManager;
     }
 
+    /**
+     * 1.校验传递过来的验证码与缓存中的验证码是否匹配
+     * 2.交由SpringSecurity校验用户名和密码是否正确
+     * 3.判断token是否有效（获取token是否为空或者解析token是否为空）
+     * 4.使用SpringSecurity的密码登录模式去校验用户有效性
+     * 5.创建oauth请求返回
+     *
+     * @param client
+     * @param tokenRequest
+     * @return
+     */
     @Override
     protected OAuth2Authentication getOAuth2Authentication(ClientDetails client, TokenRequest tokenRequest) {
-
-        // return super.getOAuth2Authentication(client, tokenRequest);
-        // 1.校验传递过来的验证码与缓存中的验证码是否匹配
-        // 1.从请求体获取用户名和用户密码
-        // 2.交由SpringSecurity校验用户名和密码是否正确
-        // 3.判断token是否有效（获取token是否为空或者解析token是否为空）
-        // 4.使用SpringSecurity的密码登录模式去校验用户有效性
-        // 5.创建oauth请求返回
 
         Map<String, String> reqParameters = tokenRequest.getRequestParameters();
         String username = reqParameters.get(TokenUtil.USERNAME);
@@ -64,7 +67,7 @@ public class CaptchaTokenGranter extends AbstractTokenGranter {
         String captchaKey = reqParameters.get(TokenUtil.CAPTCHA_KEY);
         String captchaCode = reqParameters.get(TokenUtil.CAPTCHA_CODE);
         // 获取并删除，为了防止验证码复用
-        String cacheCatpchaCode = blogRedis.getAndDel(CacheName.CAPTCHA_CACHE + captchaKey);
+        String cacheCatpchaCode = blogRedis.getAndDel(CacheName.CAPTCHA_CACHE.concat(captchaKey));
         // 忽略大小写验证
         if (StrUtil.isEmpty(captchaCode) || !StrUtil.equals(captchaCode, cacheCatpchaCode, true)) {
             throw new UserDeniedAuthorizationException(TokenUtil.CAPTCHA_NOT_CORRECT);

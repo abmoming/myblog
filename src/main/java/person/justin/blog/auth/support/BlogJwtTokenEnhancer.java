@@ -1,5 +1,6 @@
 package person.justin.blog.auth.support;
 
+import cn.hutool.core.util.ObjectUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -28,9 +29,13 @@ public class BlogJwtTokenEnhancer implements TokenEnhancer {
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
 
         HashMap<String, Object> info = new HashMap<>();
+        HashMap<String, Object> infos = new HashMap<>();
         info.put("customer", "自定义内容");
-        ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(info);
+        info.put("dept_id", "部门id");
+        info.put("permiss_id", "资源集");
+        infos.put("infos", info);
+        ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(infos);
 
-        return accessToken;
+        return ObjectUtil.isNotNull(jwtAccessTokenConverter) ? jwtAccessTokenConverter.enhance(accessToken, authentication) : accessToken;
     }
 }
